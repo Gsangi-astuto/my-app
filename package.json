@@ -6,12 +6,14 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "dev:test": "nodemon --watch 'src/app/components/JsPlayground/jsPlayground.js' --exec 'node' src/app/components/JsPlayground/jsPlayground.js"
   },
   "dependencies": {
     "clsx": "^2.1.1",
     "lodash": "^4.17.21",
     "next": "15.2.1",
+    "nodemon": "^3.1.9",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "tailwind-merge": "^3.0.2"
