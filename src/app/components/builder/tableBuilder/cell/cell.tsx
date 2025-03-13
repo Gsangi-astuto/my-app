@@ -1,10 +1,52 @@
+import cn from "@/app/utils/utils";
 import React from "react";
 
 export type CellProps = {
   value: string;
 };
 
-export const TextCell = (props: CellProps) => {
+const WithTableSelectCell = (Component: React.ComponentType<CellProps>) => {
+  const WithTableSelectCell = (props: CellProps) => {
+    const {
+      tableState,
+      rowIndex,
+      column,
+      setTableState,
+      onAction,
+      config,
+      rowIndex,
+      columnIndex,
+    } = props;
+
+    const onChange = (action: string, payload: any) => {
+      onAction({
+        action,
+        tableState,
+        setTableState,
+        rowIndex,
+        column,
+        payload,
+        columnIndex,
+      });
+    };
+    return <Component {...props} onChange={onChange} />;
+  };
+
+  return WithTableSelectCell;
+};
+const BaseTextCell = (props: CellProps) => {
+  const { config } = props;
+  return (
+    <div className={cn(config?.className)}>
+      <h1>{props.value}</h1>
+    </div>
+  );
+};
+
+export const TextCell = WithTableSelectCell(BaseTextCell);
+
+const BaseNumberCell = (props: CellProps) => {
+  const { tableState, rowIndex, column, setTableState, onAction } = props;
   return (
     <div>
       <h1>{props.value}</h1>
@@ -12,14 +54,16 @@ export const TextCell = (props: CellProps) => {
   );
 };
 
-export const InputCell = (props: CellProps) => {
-  const { tableState, rowIndex, column, setTableState, actionHandler } = props;
+export const NumberCell = WithTableSelectCell(BaseNumberCell);
+
+const BaseInputCell = (props: CellProps) => {
+  const { tableState, rowIndex, column, setTableState, onAction } = props;
   return (
     <input
       type="text"
       defaultValue={props.value}
       onChange={(e) =>
-        actionHandler({
+        onAction({
           action: "update",
           tableState,
           setTableState,
@@ -32,15 +76,9 @@ export const InputCell = (props: CellProps) => {
   );
 };
 
-export const NumberCell = (props: CellProps) => {
-  return (
-    <div>
-      <h1>{props.value}</h1>
-    </div>
-  );
-};
+export const InputCell = WithTableSelectCell(BaseInputCell);
 
-export const ToggleCell = (props: CellProps) => {
+const BaseToggleCell = (props: CellProps) => {
   const { tableState, rowIndex, column, setTableState, actionHandler } = props;
   return (
     <div>
@@ -60,3 +98,5 @@ export const ToggleCell = (props: CellProps) => {
     </div>
   );
 };
+
+export const ToggleCell = WithTableSelectCell(BaseToggleCell);

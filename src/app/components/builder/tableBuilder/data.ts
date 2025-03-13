@@ -26,26 +26,14 @@ export const tableSchema = [
   },
 ];
 
-export const tableData = [
-  {
-    name: "John Doe",
-    age: 30,
-    email: "john.doe@example.com",
-    address: "123 Main St, Anytown, USA",
-    toggle: false,
-  },
-  {
-    name: "Jane Smith",
-    age: 25,
-    email: "jane.smith@example.com",
-    address: "456 Maple Ave, Anytown, USA",
-    toggle: true,
-  },
-  {
-    name: "Jim Beam",
-    age: 40,
-    email: "jim.beam@example.com",
-    address: "789 Oak St, Anytown, USA",
-    toggle: false,
-  },
-];
+export const tableData = Array.from({ length: 10 }, (_, index) => ({
+  name: `User ${index + 1}`,
+  age: Math.floor(Math.random() * 50) + 20,
+  email: `user${index + 1}@example.com`,
+  address: `${Math.floor(Math.random() * 999) + 1} ${
+    ["Main St", "Oak Ave", "Maple Rd", "Cedar Ln"][
+      Math.floor(Math.random() * 4)
+    ]
+  }, Anytown, USA`,
+  toggle: Math.random() > 0.5,
+}));

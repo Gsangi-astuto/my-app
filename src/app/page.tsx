@@ -1,11 +1,12 @@
 "use client";
 
 import TableBuilder from "./components/builder/tableBuilder/tableBuilder";
+import DigitalClock from "./components/digitalClock/digitalClock";
 
 const Page = () => {
   return (
     <div>
-      <TableBuilder />
+      <DigitalClock />
     </div>
   );
 };

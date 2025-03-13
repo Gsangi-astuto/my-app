@@ -3,7 +3,9 @@
 import React from "react";
 import { tableSchema, tableData } from "./data";
 import { tableCellVsComponent } from "./displayMap";
-import { actionHandler } from "./tableBuilder.action";
+import cn from "@/app/utils/utils";
+import { getRowProps } from "./tableBuilder.config";
+import { onAction } from "./tableBuilder.action";
 
 const RenderHeader = ({ tableSchemaState }) => {
   return (
@@ -27,7 +29,8 @@ const CellWrapper = ({
   columnIndex,
   tableState,
   setTableState,
-  actionHandler,
+  onAction,
+  config,
 }) => {
   const Cell =
     tableCellVsComponent[column.cell as keyof typeof tableCellVsComponent];
@@ -41,7 +44,8 @@ const CellWrapper = ({
       columnIndex={columnIndex}
       tableState={tableState}
       setTableState={setTableState}
-      actionHandler={actionHandler}
+      onAction={onAction}
+      config={config}
     />
   );
 };
@@ -50,15 +54,22 @@ const RenderRow = ({
   tableState,
   tableSchemaState,
   setTableState,
-  actionHandler,
+  onAction,
 }) => {
+  const { rowIdConfig, rowClassName } = getRowProps({
+    tableSchema: tableSchemaState,
+    tableData: tableState,
+  });
   return (
     <>
       {tableState?.map((row, rowIndex) => (
-        <tr key={row.name}>
+        <tr key={row.name} className={cn(rowClassName)}>
           {tableSchemaState.map((column, columnIndex) => {
             return (
-              <td key={column.id}>
+              <td
+                key={column.id}
+                className={cn(rowIdConfig[column.id]?.cellClassName)}
+              >
                 <CellWrapper
                   key={`${row.name}-${column.id}`}
                   value={row[column.id as keyof typeof row]}
@@ -68,7 +79,8 @@ const RenderRow = ({
                   columnIndex={columnIndex}
                   tableState={tableState}
                   setTableState={setTableState}
-                  actionHandler={actionHandler}
+                  onAction={onAction}
+                  config={rowIdConfig[column.id]}
                 />
               </td>
             );
@@ -79,27 +91,24 @@ const RenderRow = ({
   );
 };
 
-// Memoize components to prevent unnecessary re-renders
 const MemoizedRenderHeader = React.memo(RenderHeader);
 const MemoizedRenderRow = React.memo(RenderRow);
 
 const TableBuilder = () => {
   const [tableState, setTableState] = React.useState(tableData);
-  const [tableSchemaState, setTableSchemaState] = React.useState(tableSchema);
-
 
   return (
     <div>
       <table>
         <thead>
-          <MemoizedRenderHeader tableSchemaState={tableSchemaState} />
+          <MemoizedRenderHeader tableSchemaState={tableSchema} />
         </thead>
         <tbody>
           <MemoizedRenderRow
             tableState={tableState}
-            tableSchemaState={tableSchemaState}
+            tableSchemaState={tableSchema}
             setTableState={setTableState}
-            actionHandler={actionHandler}
+            onAction={onAction}
           />
         </tbody>
       </table>

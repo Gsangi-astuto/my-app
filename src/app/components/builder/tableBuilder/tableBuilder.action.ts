@@ -1,4 +1,4 @@
-export const actionHandler = ({
+export const onAction = ({
   action,
   tableState,
   setTableState,
